@@ -3,7 +3,7 @@ import LiveSession from '../../pages/LiveSession'
 
 const LiveSessionPage = () => {
   return (
-    <LiveSessionPage/>
+    <LiveSession />
   )
 }
 
