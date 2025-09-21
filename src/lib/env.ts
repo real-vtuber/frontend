@@ -1,13 +1,20 @@
-import { config } from 'dotenv'
-
-// Load environment variables from .env file
-config()
-
 /**
  * Environment configuration
  * Centralizes all environment variable access with proper typing
- * Loads from .env file using dotenv
+ * Handles both server and client environments
  */
+
+// Only load dotenv on server side
+let envLoaded = false
+if (typeof window === 'undefined') {
+  try {
+    const { config } = require('dotenv')
+    config()
+    envLoaded = true
+  } catch (error) {
+    console.warn('dotenv not available, using process.env directly')
+  }
+}
 
 export const env = {
   // AWS Configuration
@@ -36,6 +43,7 @@ export const env = {
   // D-ID Configuration
   DID_CLIENT_KEY: process.env.DID_CLIENT_KEY || '',
   DID_AGENT_ID: process.env.DID_AGENT_ID || '',
+  DID_API_KEY: process.env.DID_API_KEY || '',
 
   // Next.js Configuration
   NODE_ENV: process.env.NODE_ENV || 'development',
@@ -74,4 +82,4 @@ export function getEnv(key: keyof typeof env): string {
     throw new Error(`Environment variable ${key} is not set. Please check your .env file.`)
   }
   return value
-} 
+}
