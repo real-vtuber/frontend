@@ -1,37 +1,55 @@
-"use client"
+'use client'
 
-import React, { useState } from 'react'
-import { Play, Square } from 'lucide-react'
+import React from 'react'
+
+interface StartAndStopMeetingButtonProps {
+  onStart?: () => void
+  onStop?: () => void
+  isLive?: boolean
+  disabled?: boolean
+}
 
 /**
- * Start and Stop Meeting button component
- * Toggles between start and stop meeting functionality
+ * Start and Stop Meeting Button Component
+ * Updated to support D-ID Avatar live session controls
  */
-const StartAndStopMeetingButton = () => {
-  const [isMeetingActive, setIsMeetingActive] = useState(false)
-
-  const handleToggleMeeting = () => {
-    setIsMeetingActive(!isMeetingActive)
+const StartAndStopMeetingButton: React.FC<StartAndStopMeetingButtonProps> = ({
+  onStart,
+  onStop,
+  isLive = false,
+  disabled = false
+}) => {
+  const handleClick = () => {
+    if (disabled) return
+    
+    if (isLive) {
+      onStop?.()
+    } else {
+      onStart?.()
+    }
   }
 
   return (
-    <button 
-      onClick={handleToggleMeeting}
-      className={`flex items-center justify-center px-6 py-3 rounded-full font-medium text-white transition-colors duration-200 ${
-        isMeetingActive 
-          ? 'bg-red-500 hover:bg-red-600' 
-          : 'bg-green-500 hover:bg-green-600'
+    <button
+      onClick={handleClick}
+      disabled={disabled}
+      className={`px-6 py-3 rounded-lg font-medium transition-colors flex items-center space-x-2 ${
+        isLive
+          ? 'bg-red-600 hover:bg-red-700 text-white'
+          : 'bg-green-600 hover:bg-green-700 text-white'
+      } ${
+        disabled ? 'opacity-50 cursor-not-allowed' : ''
       }`}
     >
-      {isMeetingActive ? (
+      {isLive ? (
         <>
-          <Square className="w-5 h-5 mr-2" />
-          Stop Meeting
+          <span>⏹️</span>
+          <span>Stop Live Session</span>
         </>
       ) : (
         <>
-          <Play className="w-5 h-5 mr-2" />
-          Start Meeting
+          <span>▶️</span>
+          <span>Start Live Session</span>
         </>
       )}
     </button>
